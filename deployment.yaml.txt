@@ -1,0 +1,28 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heladus-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: heladus
+  template:
+    metadata:
+      labels:
+        app: heladus
+    spec:
+      containers:
+      - name: db-container
+        image: eacoronat/mssql-server:2017-latest
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        ports:
+        - containerPort: 1433
+      - name: app-container
+        image: eacoronat/heladus:dev
+        ports:
+        - containerPort: 80
+        command: ["/bin/sh", "-c", "tail -f /dev/null"]
